@@ -21,7 +21,6 @@ const getUserWithEmail = function(email) {
   const values = [email];
   return pool.query('SELECT * FROM users WHERE email = $1;', values)
   .then(res => {
-    console.log(res.rows);
     return res.rows[0];
   })
   .catch(err => {
@@ -40,7 +39,6 @@ const getUserWithId = function(id) {
   const values = [id];
   return pool.query('SELECT * FROM users WHERE id = $1;', values)
   .then(res => {
-    //console.log(res.rows);
     return res.rows[0];
   })
   .catch(err => {
@@ -60,7 +58,6 @@ const addUser =  function(user) {
   return pool.query(`INSERT INTO users (name, email, password)
                     Values ($1, $2, $3) RETURNING *;`, values)
   .then(res => {
-    //console.log(res.rows);
     return res.rows;
   })
   .catch(err => {
@@ -77,7 +74,14 @@ exports.addUser = addUser;
  * @return {Promise<[{}]>} A promise to the reservations.
  */
 const getAllReservations = function(guest_id, limit = 10) {
-  return getAllProperties(null, 2);
+  const values = [guest_id, limit];
+  return pool.query('SELECT * FROM reservations WHERE guest_id = $1 LIMIT $2;', values)
+  .then(res => {
+    return res.rows;
+  })
+  .catch(err => {
+    console.log('ERROR: ',err);
+  })
 }
 exports.getAllReservations = getAllReservations;
 
